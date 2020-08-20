@@ -9,11 +9,11 @@ This container enables the ```conda``` command with a lightweight version of Ana
 
 ### NVIDIA/CUDA GPU-enabled Containers
 
-Two flavors provide an [NVIDIA GPU-enabled](https://hub.docker.com/r/nvidia/cuda) container with [TensorFlow](https://tensorflow.org) pre-installed through [Anaconda](https://anaconda.com/).
+Two flavors provide an [NVIDIA GPU-enabled](https://hub.docker.com/r/nvidia/cuda) container with [Anaconda](https://anaconda.com/).
 
 ## Getting the containers
 
-### Vanilla Magenta
+### Vanilla Anaconda
 
 The base container, based on the ```ubuntu:latest``` from [Ubuntu](https://hub.docker.com/_/ubuntu/) running a Tini shell. For the container with a ```/usr/bin/tini``` entry point, use:
 
@@ -27,7 +27,7 @@ With Jupyter Notebooks server pre-installed, pull with:
 docker pull xychelsea/anaconda3:latest-jupyter
 ```
 
-### TensorFlow with NVIDIA/CUDA GPU support
+### Anaconda with NVIDIA/CUDA GPU support
 
 Modified version of ```nvidia/cuda:latest``` container, with support for NVIDIA/CUDA graphical processing units through the Tini shell. For the container with a ```/usr/bin/tini``` entry point:
 
@@ -43,9 +43,9 @@ docker pull xychelsea/anaconda3:latest-gpu-jupyter
 
 ## Running the containers
 
-To run the containers with the generic Docker application or NVIDIA enabled Docker, use the ```docker run``` command with a bound volume directory ```workspace``` attached at mount point ```/usr/local/magenta/workspace```.
+To run the containers with the generic Docker application or NVIDIA enabled Docker, use the ```docker run``` command.
 
-### Vanilla Magenta
+### Vanilla Anaconda
 
 ```bash
 docker run --rm -it xychelsea/anaconda3:latest
@@ -56,7 +56,7 @@ With Jupyter Notebooks server pre-installed, run with:
 ```bash
 docker run --rm -it -d -p 8888:8888 xychelsea/anaconda:latest-jupyter
 ```
-### TensorFlow with NVIDIA/CUDA GPU support
+### Anaconda with NVIDIA/CUDA GPU support
 
 ```bash
 docker run --gpus all --rm -it xychelsea/anaconda:latest-gpu /bin/bash
@@ -90,7 +90,7 @@ With Jupyter Notebooks server pre-installed, build with:
 docker build -t anaconda3:latest-jupyter -f Dockerfile.jupyter .
 ```
 
-### Magenta with NVIDIA/CUDA GPU support
+### Anaconda with NVIDIA/CUDA GPU support
 
 ```bash
 docker build -t anaconda3:latest-gpu -f Dockerfile.nvidia .
