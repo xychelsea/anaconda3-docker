@@ -1,0 +1,60 @@
+FROM xychelsea/anaconda3:latest
+LABEL description="Anaconda 3 Vanilla Container w/ Jupyter Notebooks"
+
+# $ docker build -t xychelsea/anaconda3:latest-jupyter -f Dockerfile.jupyter .
+# $ docker run --rm -it -d -p 8888:8888 xychelsea/anaconda3:latest-jupyter
+# $ docker push xychelsea/anaconda3:latest-jupyter
+
+# Start as root
+USER root
+
+# Update packages
+RUN apt-get update --fix-missing \
+    && apt-get -y upgrade \
+    && apt-get -y dist-upgrade
+
+# Switch to user "anaconda"
+USER ${ANACONDA_UID}
+WORKDIR ${HOME}
+
+# Update Anaconda
+RUN conda update -c defaults conda
+
+# Install Jupyter Notebook
+RUN conda install -y notebook jupyterhub jupyterlab \
+    && jupyter notebook --generate-config \
+    && rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging
+
+# Switch back to root
+USER root
+
+# Clean-up Jupyter Notebook cache
+RUN npm cache clean --force
+
+# Clean Anaconda
+RUN conda clean -afy \
+    && fix-permissions ${HOME} \
+    && fix-permissions ${ANACONDA_PATH}
+
+# Clean packages and caches
+RUN apt-get --purge -y autoremove \
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* \
+    && rm -rvf /home/${ANACONDA_PATH}/.cache/yarn
+
+EXPOSE 8888
+
+# Configure container startup
+ENTRYPOINT [ "tini", "-g", "--" ]
+CMD [ "jupyter-start-notebook" ]
+
+# Copy jupyter scripts
+COPY scripts/start-notebook.sh /usr/local/bin/jupyter-start-notebook
+COPY scripts/start-singleuser.sh /usr/local/bin/jupyter-start-singleuser
+COPY scripts/start.sh /usr/local/bin/jupyter-start
+COPY scripts/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
+RUN chmod +x /usr/local/bin/jupyter-start* \
+    && fix-permissions /etc/jupyter
+
+# Re-activate user "anaconda"
+USER $ANACONDA_UID
+WORKDIR $HOME
