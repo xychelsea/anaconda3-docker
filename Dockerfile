@@ -21,7 +21,7 @@ LABEL description="Anaconda 3 Vanilla Container"
 # $ docker run --rm -it xychelsea/anaconda3:latest /bin/bash
 # $ docker push xychelsea/anaconda3:latest
 
-ARG ANACONDA_CONTAINER="v0.1.1"
+ARG ANACONDA_CONTAINER="v0.1.2"
 ARG ANACONDA_DIST="Miniconda3"
 ARG ANACONDA_PYTHON="py38"
 ARG ANACONDA_CONDA="4.8.3"
