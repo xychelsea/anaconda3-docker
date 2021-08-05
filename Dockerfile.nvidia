@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM nvidia/cuda:11.4.0-devel-ubuntu20.04
+FROM nvidia/cuda:11.4.0-cudnn8-devel-ubuntu20.04
 LABEL description="Anaconda 3 GPU Container"
 
 # $ docker build --network=host -t xychelsea/anaconda3:latest-gpu -f Dockerfile.nvidia .
@@ -42,6 +42,8 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 USER root
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
 # Update packages
 RUN apt-get update --fix-missing \
