@@ -14,17 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM ubuntu:hirsute-20210723
+FROM ubuntu:jammy-20220428
 LABEL description="Anaconda 3 Vanilla Container"
 
 # $ docker build --network=host -t xychelsea/anaconda3:latest -f Dockerfile .
 # $ docker run --rm -it xychelsea/anaconda3:latest /bin/bash
 # $ docker push xychelsea/anaconda3:latest
 
-ARG ANACONDA_CONTAINER="v0.4.1"
+ARG ANACONDA_CONTAINER="v0.5.0"
 ARG ANACONDA_DIST="Miniconda3"
 ARG ANACONDA_PYTHON="py39"
-ARG ANACONDA_CONDA="4.10.3"
+ARG ANACONDA_CONDA="4.11.0"
 ARG ANACONDA_OS="Linux"
 ARG ANACONDA_ARCH="x86_64"
 ARG ANACONDA_FLAVOR="Miniforge3"
