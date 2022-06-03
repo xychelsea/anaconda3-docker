@@ -1,5 +1,5 @@
 # Anaconda / Miniconda 3 Dockerfile for Anaconda with TensorFlow stack
-# Copyright (C) 2020, 2021  Chelsea E. Manning
+# Copyright (C) 2020-2022  Chelsea E. Manning
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,14 +21,14 @@ LABEL description="Anaconda 3 Vanilla Container"
 # $ docker run --rm -it xychelsea/anaconda3:latest /bin/bash
 # $ docker push xychelsea/anaconda3:latest
 
-ARG ANACONDA_CONTAINER="v0.5.0"
+ARG ANACONDA_CONTAINER="v0.5.1"
 ARG ANACONDA_DIST="Miniconda3"
 ARG ANACONDA_PYTHON="py39"
-ARG ANACONDA_CONDA="4.11.0"
+ARG ANACONDA_CONDA="4.12.0"
 ARG ANACONDA_OS="Linux"
 ARG ANACONDA_ARCH="x86_64"
 ARG ANACONDA_FLAVOR="Miniforge3"
-ARG ANACONDA_PATCH="4"
+ARG ANACONDA_PATCH="1"
 ARG ANACONDA_VERSION="${ANACONDA_CONDA}-${ANACONDA_PATCH}"
 ARG ANACONDA_INSTALLER="${ANACONDA_FLAVOR}-${ANACONDA_VERSION}-${ANACONDA_OS}-${ANACONDA_ARCH}.sh"
 ARG ANACONDA_ENV="base"
