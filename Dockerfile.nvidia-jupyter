@@ -1,5 +1,5 @@
-# Anaconda / Miniconda 3 Dockerfile for Anaconda with TensorFlow stack
-# Copyright (C) 2020-2022  Chelsea E. Manning
+# Anaconda3 / Miniconda3 Dockerfile
+# Copyright (C) 2020-2023  Chelsea E. Manning
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,17 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM xychelsea/anaconda3:v0.5.1-gpu
+FROM xychelsea/anaconda3:v0.6-gpu
 LABEL description="Anaconda 3 GPU Container w/ Jupyter Notebooks"
 
 # $ docker build --network=host -t xychelsea/anaconda3:latest-gpu-jupyter -f Dockerfile.nvidia-jupyter .
 # $ docker run --rm -it -d -p 8888:8888 xychelsea/anaconda3:latest-gpu-jupyter
 # $ docker push xychelsea/anaconda3:latest-gpu-jupyter
 
-ARG JUPYTER_LAB_VERSION="3.4.3"
-ARG JUPYTER_HUB_VERSION="2.3.1"
+ARG JUPYTER_LAB_VERSION="3.6.2"
+ARG JUPYTER_HUB_VERSION="3.1.1"
 ARG JUPYTER_NB_CK_VERSION="2.3.1"
-ARG JUPYTER_IPYWIDGETS_VERSION="7.7.1"
+ARG JUPYTER_IPYWIDGETS_VERSION="8.0.4"
 
 ENV JUPYTER_LAB_VERSION="${JUPYTER_LAB_VERSION}"
 ENV JUPYTER_HUB_VERSION="${JUPYTER_HUB_VERSION}"
