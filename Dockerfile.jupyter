@@ -14,22 +14,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM xychelsea/anaconda3:v22.11.1
+FROM xychelsea/anaconda3:v23.1.0
 LABEL description="Anaconda3 Vanilla Container w/ Jupyter Notebooks"
 
 # $ docker build --network=host -t xychelsea/anaconda3:latest-jupyter -f Dockerfile.jupyter .
 # $ docker run --rm -it -d -p 8888:8888 xychelsea/anaconda3:latest-jupyter
 # $ docker push xychelsea/anaconda3:latest-jupyter
 
-ARG JUPYTER_LAB_VERSION="3.6.2"
-ARG JUPYTER_HUB_VERSION="3.1.1"
+ARG JUPYTER_LAB_VERSION="4.0.3"
+ARG JUPYTER_HUB_VERSION="4.0.1"
 ARG JUPYTER_NB_CK_VERSION="2.3.1"
-ARG JUPYTER_IPYWIDGETS_VERSION="8.0.4"
+ARG JUPYTER_IPYWIDGETS_VERSION="8.0.7"
 
 ENV JUPYTER_LAB_VERSION="${JUPYTER_LAB_VERSION}"
 ENV JUPYTER_HUB_VERSION="${JUPYTER_HUB_VERSION}"
 ENV JUPYTER_NB_CK_VERSION="${JUPYTER_NB_CK_VERSION}"
 ENV JUPYTER_IPYWIDGETS_VERSION="${JUPYTER_IPYWIDGETS_VERSION}"
+ENV JUPYTER_ENABLE_LAB="yes"
 
 # Start as root
 USER root
@@ -52,7 +53,7 @@ RUN conda install -c conda-forge \
     jupyterlab=${JUPYTER_LAB_VERSION} \
     nb_conda_kernels=${JUPYTER_NB_CK_VERSION} \
     ipywidgets=${JUPYTER_IPYWIDGETS_VERSION} \
-    && jupyter notebook --generate-config \
+    && jupyter lab --generate-config \
     && jupyter lab clean \
     && rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging
 
