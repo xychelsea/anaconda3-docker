@@ -82,7 +82,6 @@ CMD [ "start-notebook.sh" ]
 # Copy jupyter scripts
 COPY scripts/start-notebook.sh /usr/local/bin/start-notebook.sh
 COPY scripts/start-singleuser.sh /usr/local/bin/start-singleuser.sh
-COPY scripts/start.sh /usr/local/bin/start.sh
 COPY scripts/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
 RUN chmod +x /usr/local/bin/start*.sh \
     && fix-permissions /etc/jupyter

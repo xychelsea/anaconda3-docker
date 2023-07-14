@@ -4,17 +4,14 @@
 
 set -e
 
+if [[ -n "${JUPYTERHUB_API_TOKEN}" ]]; then
+    echo "WARNING: using start-singleuser.sh instead of start-notebook.sh to start a server associated with JupyterHub."
+    exec /usr/local/bin/start-singleuser.sh "$@"
+fi
+
 wrapper=""
 if [[ "${RESTARTABLE}" == "yes" ]]; then
     wrapper="run-one-constantly"
 fi
 
-if [[ ! -z "${JUPYTERHUB_API_TOKEN}" ]]; then
-    # launched by JupyterHub, use single-user entrypoint
-    exec /usr/local/bin/start-singleuser.sh "$@"
-elif [[ ! -z "${JUPYTER_ENABLE_LAB}" ]]; then
-    . /usr/local/bin/start.sh $wrapper jupyter lab "$@"
-else
-    echo "WARN: Jupyter Notebook deprecation notice https://github.com/jupyter/docker-stacks#jupyter-notebook-deprecation-notice."
-    . /usr/local/bin/start.sh $wrapper jupyter notebook "$@"
-fi
+exec /usr/local/bin/start.sh ${wrapper} jupyter lab "$@"
