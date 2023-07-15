@@ -25,20 +25,12 @@ ARG JUPYTER_LAB_VERSION="4.0.3"
 ARG JUPYTER_HUB_VERSION="4.0.1"
 ARG JUPYTER_NB_CK_VERSION="2.3.1"
 ARG JUPYTER_IPYWIDGETS_VERSION="8.0.7"
+ARG JUPYTER_IPYKERNEL="6.24.0"
 
 ENV JUPYTER_LAB_VERSION="${JUPYTER_LAB_VERSION}"
-ENV JUPYTER_HUB_VERSION="${JUPYTER_HUB_VERSION}"
 ENV JUPYTER_NB_CK_VERSION="${JUPYTER_NB_CK_VERSION}"
 ENV JUPYTER_IPYWIDGETS_VERSION="${JUPYTER_IPYWIDGETS_VERSION}"
-ENV JUPYTER_ENABLE_LAB="yes"
-
-# Start as root
-USER root
-
-# Update packages
-RUN apt-get update --fix-missing \
-    && apt-get -y upgrade \
-    && apt-get -y dist-upgrade
+ENV JUPYTER_IPYKERNEL="${JUPYTER_IPYKERNEL}"
 
 # Switch to user "anaconda"
 USER ${ANACONDA_UID}
@@ -49,42 +41,34 @@ RUN conda update -c defaults conda
 
 # Install Jupyter Notebook
 RUN conda install -c conda-forge \
-    jupyterhub=${JUPYTER_HUB_VERSION} \
     jupyterlab=${JUPYTER_LAB_VERSION} \
     nb_conda_kernels=${JUPYTER_NB_CK_VERSION} \
     ipywidgets=${JUPYTER_IPYWIDGETS_VERSION} \
-    && jupyter lab --generate-config \
-    && jupyter lab clean \
-    && rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging
+    ipykernel=${JUPYTER_IPYKERNEL}
 
-# Switch back to root
-USER root
-
-# Clean-up Jupyter Notebook cache
-RUN npm cache clean --force
+RUN jupyter lab --generate-config
 
 # Clean Anaconda
 RUN conda clean -afy \
     && fix-permissions ${HOME} \
     && fix-permissions ${ANACONDA_PATH}
 
-# Clean packages and caches
-RUN apt-get --purge -y autoremove \
-    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* \
-    && rm -rvf /home/${ANACONDA_PATH}/.cache/yarn
-
 EXPOSE 8888
 
 # Configure container startup
 ENTRYPOINT [ "tini", "-g", "--" ]
-CMD [ "start-notebook.sh" ]
+CMD [ "jupyter", "lab" ]
 
-# Copy jupyter scripts
-COPY scripts/start-notebook.sh /usr/local/bin/start-notebook.sh
-COPY scripts/start-singleuser.sh /usr/local/bin/start-singleuser.sh
-COPY scripts/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
-RUN chmod +x /usr/local/bin/start*.sh \
-    && fix-permissions /etc/jupyter
+# Currently need to have both jupyter_notebook_config and jupyter_server_config to support classic and lab
+COPY scripts/jupyter_server_config.py scripts/docker_healthcheck.py /etc/jupyter/
+
+# Fix permissions on /etc/jupyter as root
+USER root
+
+# Legacy requirements for jupyter notebooks
+RUN sed -re "s/c.ServerApp/c.NotebookApp/g" \
+    /etc/jupyter/jupyter_server_config.py > /etc/jupyter/jupyter_notebook_config.py \
+    && fix-permissions /etc/jupyter/
 
 # Re-activate user "anaconda"
 USER $ANACONDA_UID
